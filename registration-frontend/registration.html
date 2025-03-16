@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Регистрация</title>
+  <style>
+    .error-message {
+      color: red;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Регистрация</h2>
+  <form id="registrationForm">
+    <label for="name">Имя:</label>
+    <input type="text" id="name" name="name">
+    <span class="error-message" id="nameError"></span>
+    <br><br>
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email">
+    <span class="error-message" id="emailError"></span>
+    <br><br>
+    
+    <label for="password">Пароль:</label>
+    <input type="password" id="password" name="password">
+    <span class="error-message" id="passwordError"></span>
+    <br><br>
+    
+    <button type="submit">Зарегистрироваться</button>
+  </form>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      document.getElementById("registrationForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+        
+        // Очистка предыдущих ошибок
+        document.getElementById("nameError").textContent = "";
+        document.getElementById("emailError").textContent = "";
+        document.getElementById("passwordError").textContent = "";
+        
+        // Сбор данных формы
+        const formData = {
+          name: document.getElementById("name").value.trim(),
+          email: document.getElementById("email").value.trim(),
+          password: document.getElementById("password").value
+        };
+        
+        try {
+          const response = await fetch("http://localhost:8080/users", { // URL должен соответствовать вашему backend
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(formData)
+          });
+          
+          if (!response.ok) {
+            const errorData = await response.json();
+            // Если backend возвращает массив ошибок
+            if (errorData.errors && Array.isArray(errorData.errors)) {
+              errorData.errors.forEach(error => {
+                if (error.field === "name") {
+                  document.getElementById("nameError").textContent = error.defaultMessage || error.message;
+                } else if (error.field === "email") {
+                  document.getElementById("emailError").textContent = error.defaultMessage || error.message;
+                } else if (error.field === "password") {
+                  document.getElementById("passwordError").textContent = error.defaultMessage || error.message;
+                }
+              });
+            } else {
+              // Если ошибки возвращаются не в виде массива
+              alert("Ошибка регистрации: " + (errorData.message || "Неизвестная ошибка"));
+            }
+          } else {
+            alert("Регистрация успешна!");
+            document.getElementById("registrationForm").reset();
+          }
+        } catch (error) {
+          alert("Ошибка при отправке запроса: " + error.message);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

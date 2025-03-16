@@ -1,0 +1,31 @@
+
+target/
+*.log
+*.class
+*.jar
+*.war
+
+# Docker
+*.log
+*.pid
+*.swp
+.docker-compose.override.yml
+
+# IntelliJ IDEA
+.idea/
+
+*.log
+*.db
+
+
+.env
+
+
+.DS_Store
+Thumbs.db
+
+
+*.swp
+*.swo
+
+*.iml

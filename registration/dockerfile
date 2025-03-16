@@ -1,0 +1,4 @@
+FROM openjdk:21-jdk-slim
+WORKDIR /app
+COPY target/registration-0.0.1-SNAPSHOT.jar /app/registration.jar
+ENTRYPOINT ["java", "-jar", "/app/registration.jar"]
