@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Новое сообщение</title>
+</head>
+<body>
+  <h1>Создать новое сообщение</h1>
+  <form id="messageForm">
+    <div>
+      <label for="message">Сообщение:</label>
+      <input type="text" id="message" name="message" required>
+    </div>
+    <div>
+      <button type="submit">Отправить</button>
+    </div>
+  </form>
+  <br>
+  <a href="notifications.html">Вернуться к уведомлениям</a>
+  
+  <script>
+    document.getElementById('messageForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const messageText = document.getElementById('message').value;
+      try {
+        const response = await fetch('http://localhost:8080/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ message: messageText })
+        });
+        if (response.ok) {
+          alert('Сообщение успешно создано');
+          window.location.href = 'notifications.html';
+        } else {
+          alert('Ошибка при создании сообщения');
+        }
+      } catch (error) {
+        console.error('Ошибка:', error);
+      }
+    });
+  </script>
+</body>
+</html>
