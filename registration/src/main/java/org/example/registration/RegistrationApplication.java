@@ -11,3 +11,5 @@ public class RegistrationApplication {
     }
 
 }
+//TODO: 1) разобраться полностью с spring security
+//TODO: 2) Изучить Spring Event

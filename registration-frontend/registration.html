@@ -59,7 +59,7 @@
           
           if (!response.ok) {
             const errorData = await response.json();
-            // Если backend возвращает массив ошибок
+
             if (errorData.errors && Array.isArray(errorData.errors)) {
               errorData.errors.forEach(error => {
                 if (error.field === "name") {

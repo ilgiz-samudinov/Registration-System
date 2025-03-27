@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Чат</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        #chat {
+            width: 50%;
+            height: 300px;
+            border: 1px solid #ccc;
+            overflow-y: auto;
+            margin: 10px auto;
+            padding: 10px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>WebSocket Чат</h1>
+
+<div id="chat"></div>
+
+<input type="text" id="messageInput" placeholder="Введите сообщение">
+<button onclick="sendMessage()">Отправить</button>
+
+<script src="script.js"></script>
+
+</body>
+</html>

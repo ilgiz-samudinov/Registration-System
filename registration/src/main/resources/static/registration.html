@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация и Вход</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 300px; margin: 50px auto; }
+        input, button { width: 100%; padding: 10px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Регистрация</h2>
+    <input type="text" id="registerUsername" placeholder="Введите имя">
+    <input type="email" id="registerEmail" placeholder="Введите email">
+    <input type="password" id="registerPassword" placeholder="Введите пароль">
+    <button onclick="register()">Зарегистрироваться</button>
+
+    <h2>Вход</h2>
+    <input type="text" id="loginUsername" placeholder="Введите имя">
+    <input type="password" id="loginPassword" placeholder="Введите пароль">
+    <button onclick="login()">Войти</button>
+</div>
+
+<script>
+    // Регистрация
+    async function register() {
+        const name = document.getElementById('registerUsername').value;
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+
+        const response = await fetch('http://localhost:8080/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password })
+        });
+
+        if (response.ok) {
+            alert('Регистрация успешна!');
+        } else {
+            alert('Ошибка регистрации!');
+        }
+    }
+
+    // Вход
+    async function login() {
+        const name = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+
+        const response = await fetch('http://localhost:8080/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, password })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            alert('Вход успешен! Токен: ' + data.token); // Здесь мы ожидаем токен
+            // Сохраняем токен в localStorage
+            localStorage.setItem("jwtToken", data.token);
+        } else {
+            alert('Ошибка входа!');
+        }
+    }
+
+    // Пример запроса с использованием JWT токена
+    async function fetchProtectedData() {
+        const token = localStorage.getItem("jwtToken");
+
+        if (!token) {
+            alert("Токен не найден. Пожалуйста, войдите.");
+            return;
+        }
+
+        const response = await fetch('http://localhost:8080/api/protected-endpoint', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Защищенные данные:', data);
+        } else {
+            alert('Ошибка запроса защищенных данных!');
+        }
+    }
+</script>
+
+
+
+</body>
+</html>

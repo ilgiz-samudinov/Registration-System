@@ -1,6 +1,8 @@
 package org.example.registration.exceptions;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,10 +17,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(UserException.class)
-    public ResponseEntity<ApiError> handleApiException(UserException exception, HttpServletRequest request) {
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ApiError> handleApiException(ApiException exception, HttpServletRequest request) {
         ResponseStatus responseStatus = exception.getClass().getAnnotation(ResponseStatus.class);
         HttpStatus status = (responseStatus != null) ? responseStatus.value() : HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -68,4 +71,27 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<Object> handleJwtException(JwtException ex) {
+        // Логируем ошибку (можно использовать логгер)
+        log.error("JWT Exception: {}", ex.getMessage());
+
+        // Формируем ответ с информацией об ошибке
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", HttpStatus.UNAUTHORIZED.value());
+        body.put("error", "Unauthorized");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
+
+
+
+
+
+
+
 }

@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class UserDto {
+public class JwtRequest {
 
     private Long id;
     @NotBlank(message = "Имя не должно быть пустым")
@@ -23,4 +23,7 @@ public class UserDto {
     @NotBlank(message = "Пароль не должен быть пустым")
     @Size(min = 8, message = "Пароль должен содержать не менее 8 символов")
     private String password;
+
+
+
 }
